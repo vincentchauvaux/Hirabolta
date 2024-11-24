@@ -29,6 +29,8 @@ export const translations = {
     selectCharactersPerRow: "Select how many characters to complete per row",
     resetProgress: "Reset Progress",
     resetProgressDescription: "Start over from the beginning",
+    rowCompleted: "Row completed successfully!",
+    movingToNextRow: "Moving to the next row...",
   },
   fr: {
     progress: "Progrès",
@@ -57,8 +59,11 @@ export const translations = {
     exerciseReset: "Exercice Réinitialisé",
     startingOver: "Reprise depuis la première ligne",
     charactersPerRow: "Caractères par Ligne",
-    selectCharactersPerRow: "Sélectionnez le nombre de caractères à compléter par ligne",
+    selectCharactersPerRow:
+      "Sélectionnez le nombre de caractères à compléter par ligne",
     resetProgress: "Réinitialiser la Progression",
     resetProgressDescription: "Recommencer depuis le début",
+    rowCompleted: "Ligne complétée avec succès !",
+    movingToNextRow: "Passage à la ligne suivante...",
   },
 };

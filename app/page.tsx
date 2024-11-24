@@ -25,31 +25,40 @@ export default function Home() {
   const [characterSet, setCharacterSet] = useState<Character[]>(hiragana);
   const [currentRow, setCurrentRow] = useState<string>("a");
   const [correctCount, setCorrectCount] = useState(0);
-  const [currentMode, setCurrentMode] = useState<'hiragana' | 'katakana'>('hiragana');
+  const [currentMode, setCurrentMode] = useState<"hiragana" | "katakana">(
+    "hiragana"
+  );
   const { toast } = useToast();
   const { t } = useLanguage();
   const { progress, setProgress } = useProgress();
   const { charactersPerRow } = useSettings();
   const { user } = useAuth();
 
-  const availableRows = Array.from(new Set(characterSet.map(char => char.row))).sort();
-  const currentRowCharacters = characterSet.filter(char => char.row === currentRow);
+  const availableRows = Array.from(
+    new Set(characterSet.map((char) => char.row))
+  ).sort();
+  const currentRowCharacters = characterSet.filter(
+    (char) => char.row === currentRow
+  );
   const progressValue = (correctCount / charactersPerRow) * 100;
 
   const generateOptions = (correct: string) => {
-    const allRomaji = characterSet.map(c => c.romaji);
+    const allRomaji = characterSet.map((c) => c.romaji);
     const wrongOptions = allRomaji
-      .filter(r => r !== correct)
+      .filter((r) => r !== correct)
       .sort(() => Math.random() - 0.5)
       .slice(0, 5);
     return [...wrongOptions, correct].sort(() => Math.random() - 0.5);
   };
 
   const selectNewCharacter = () => {
-    const rowCharacters = characterSet.filter(char => char.row === currentRow);
+    const rowCharacters = characterSet.filter(
+      (char) => char.row === currentRow
+    );
     if (rowCharacters.length === 0) return;
-    
-    const newChar = rowCharacters[Math.floor(Math.random() * rowCharacters.length)];
+
+    const newChar =
+      rowCharacters[Math.floor(Math.random() * rowCharacters.length)];
     setCurrentChar(newChar);
     setOptions(generateOptions(newChar.romaji));
   };
@@ -71,8 +80,8 @@ export default function Home() {
     if (currentIndex < availableRows.length - 1) {
       setShowConfetti(true);
       toast({
-        title: t('rowCompleted'),
-        description: t('movingToNextRow'),
+        title: t("rowCompleted"),
+        description: t("movingToNextRow"),
       });
 
       setTimeout(() => {
@@ -80,11 +89,11 @@ export default function Home() {
         const nextRow = availableRows[currentIndex + 1];
         setCurrentRow(nextRow);
         setCorrectCount(0);
-        
+
         setProgress(currentMode, {
           currentRow: nextRow,
           correctCount: 0,
-          characterSet: currentMode
+          characterSet: currentMode,
         });
       }, 2000);
     }
@@ -97,15 +106,15 @@ export default function Home() {
     setProgress(currentMode, {
       currentRow,
       correctCount: newCount,
-      characterSet: currentMode
+      characterSet: currentMode,
     });
 
     if (newCount >= charactersPerRow) {
       handleRowCompletion();
     } else {
       toast({
-        title: `${t('correct')} 正解!`,
-        description: `${currentChar.char} ${t('is')} "${currentChar.romaji}"`,
+        title: `${t("correct")} 正解!`,
+        description: `${currentChar.char} ${t("is")} "${currentChar.romaji}"`,
         duration: 1000,
       });
       setTimeout(selectNewCharacter, 1000);
@@ -119,18 +128,18 @@ export default function Home() {
       handleCorrectAnswer(currentChar);
     } else {
       toast({
-        title: `${t('tryAgain')} もう一度!`,
-        description: t('notQuiteRight'),
+        title: `${t("tryAgain")} もう一度!`,
+        description: t("notQuiteRight"),
         variant: "destructive",
         duration: 1000,
       });
     }
   };
 
-  const handleTabChange = (value: 'hiragana' | 'katakana') => {
+  const handleTabChange = (value: "hiragana" | "katakana") => {
     setCurrentMode(value);
     setCharacterSet(value === "hiragana" ? hiragana : katakana);
-    
+
     if (progress && progress[value]) {
       const selectedProgress = progress[value];
       setCurrentRow(selectedProgress.currentRow);
@@ -145,7 +154,9 @@ export default function Home() {
         <header className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-2">
             <Languages className="w-8 h-8 text-blue-600" />
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">HiraKata</h1>
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+              Hirabolta
+            </h1>
           </div>
           <div className="flex items-center gap-2">
             <AuthButtons />
@@ -154,11 +165,17 @@ export default function Home() {
         </header>
 
         <div className="mb-6">
-          <h2 className="text-xl font-semibold mb-2">Current Row: {currentRow.toUpperCase()}</h2>
+          <h2 className="text-xl font-semibold mb-2">
+            Current Row: {currentRow.toUpperCase()}
+          </h2>
           <Progress value={progressValue} className="h-2" />
         </div>
 
-        <Tabs defaultValue="hiragana" className="w-full" onValueChange={handleTabChange}>
+        <Tabs
+          defaultValue="hiragana"
+          className="w-full"
+          onValueChange={handleTabChange}
+        >
           <TabsList className="grid w-full grid-cols-2 mb-8">
             <TabsTrigger value="hiragana">Hiragana</TabsTrigger>
             <TabsTrigger value="katakana">Katakana</TabsTrigger>
